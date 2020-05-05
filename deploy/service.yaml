@@ -1,0 +1,17 @@
+# ssh-tunnel service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssh-tunnel
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 22
+    name: ssh-port
+    targetPort: 22
+    protocol: TCP
+  selector:
+    component: ssh-tunnel
+  type: LoadBalancer
+

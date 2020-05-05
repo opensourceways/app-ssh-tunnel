@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssh-tunnel
+  labels:
+    component: ssh-tunnel
+spec:
+  selector:
+    matchLabels:
+      component: ssh-tunnel
+  template:
+    metadata:
+      labels:
+        component: ssh-tunnel
+    spec:
+      containers:
+      - name: sshd-server
+        image: linuxserver/openssh-server
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+        - name: SUDO_ACCESS
+          value: true
+        - name: USER_NAME
+          value: root
+        - name: PUBLIC_KEY_FILE
+          value: /var/sshd/public_keys
+        volumeMounts:
+        - mountPath: /var/sshd/public_keys
+          name: ssh-secrets
+          subPath: public_keys
+      - name: sshd-tunnel
+        image: opensourceway/ssh-tunnel:0.0.1
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: TZ
+            value: Asia/Shanghai
+          - name: TUNNEL_HOST
+            value: "117.78.1.88"
+        volumeMounts:
+          - mountPath: /root/ssh/id_rsa
+            name: ssh-secrets
+            subPath: private_keys
+        # all of the ssh local port configuration will be added here.
+        args:
+          - -L
+          - 1080:127.0.0.1:1080
+      volumes:
+      - name: ssh-secrets
+        secret:
+          secretName: ssh-secrets
