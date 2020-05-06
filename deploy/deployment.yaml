@@ -22,13 +22,11 @@ spec:
         - name: TZ
           value: Asia/Shanghai
         - name: SUDO_ACCESS
-          value: true
+          value: "true"
         - name: USER_NAME
           value: root
-        - name: PUBLIC_KEY_FILE
-          value: /var/sshd/public_keys
         volumeMounts:
-        - mountPath: /var/sshd/public_keys
+        - mountPath: /root/.ssh/authorized_keys
           name: ssh-secrets
           subPath: public_keys
       - name: sshd-tunnel
@@ -51,3 +49,4 @@ spec:
       - name: ssh-secrets
         secret:
           secretName: ssh-secrets
+          defaultMode: 384

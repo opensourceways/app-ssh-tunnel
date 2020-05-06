@@ -9,7 +9,7 @@ spec:
   ports:
   - port: 22
     name: ssh-port
-    targetPort: 22
+    targetPort: 2222
     protocol: TCP
   selector:
     component: ssh-tunnel
