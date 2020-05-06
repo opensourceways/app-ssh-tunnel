@@ -3,4 +3,8 @@ resources:
   - service.yaml
 commonLabels:
   app: ssh-tunnel
+configMapGenerator:
+  - name: ssh-config
+    files:
+      - sshd_config
 

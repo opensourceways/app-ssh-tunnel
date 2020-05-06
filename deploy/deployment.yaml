@@ -25,10 +25,15 @@ spec:
           value: "true"
         - name: USER_NAME
           value: root
+        - name: PUBLIC_KEY_FILE
+          value: /var/sshd/public_keys
         volumeMounts:
-        - mountPath: /root/.ssh/authorized_keys
+        - mountPath: /var/sshd/public_keys
           name: ssh-secrets
           subPath: public_keys
+        - mountPath: /config/ssh_host_keys/sshd_config
+          name: ssh-config
+          subPath: sshd_config
       - name: sshd-tunnel
         image: opensourceway/ssh-tunnel:0.0.1
         imagePullPolicy: IfNotPresent
@@ -49,4 +54,6 @@ spec:
       - name: ssh-secrets
         secret:
           secretName: ssh-secrets
-          defaultMode: 384
+      - name: ssh-config
+        configMap:
+          name: ssh-config
